@@ -3,8 +3,8 @@ import numpy as np
 def k_means(data, k, max_iters=100):
 
     # Inicializar los centroides de forma aleatoria
-    #centroids = data[np.random.randint(0, len(data), k)]
-    centroids = data[np.random.choice(data.shape[0], k, replace=False)]
+    centroids = data[np.random.randint(0, len(data), k)]
+    #centroids = data[np.random.choice(data.shape[0], k, replace=False)]
     prev_centroids = []
 
     # Iterar hasta que no haya cambios en los centroides
@@ -30,7 +30,7 @@ def k_means(data, k, max_iters=100):
         
         prev_centroids = centroids
 
-    return clusters, centroids
+    return centroids
 
 # Función para asignar cada punto de datos al cluster más cercano
 def asignar_cluster(data, centroides):

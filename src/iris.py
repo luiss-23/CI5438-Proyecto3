@@ -21,7 +21,7 @@ def main():
     
     k = 10
     
-    clusters, centroides = k_means(X.values, k, 100)
+    centroides = k_means(X.values, k, 100)
 
     plt.scatter(X.values[:,0], X.values[:,1], s = 50, label='Datos')
     plt.scatter(centroides[:,0], centroides[:,1], c='red', marker='*', s=100, label='Centroides')
@@ -34,8 +34,8 @@ def main():
     species_to_int = {"Iris-setosa": 0, "Iris-versicolor": 1, "Iris-virginica": 2}
     y_test = [species_to_int[x] for x in y]
 
-    for i in range(len(etiquetas)):
-        print(f"Kmeans: {etiquetas[i]}, real: {y_test[i]}")
+    """for i in range(len(etiquetas)):
+        print(f"Kmeans: {etiquetas[i]}, real: {y_test[i]}")"""
     
 
 if __name__ == '__main__':
