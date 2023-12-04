@@ -1,42 +1,51 @@
 import numpy as np
+class KMeans:
+    
+    def __init__(self, k, max_iters=100):
+        self.cant_clusters = k
+        self.max_iters = max_iters
+        self.inercia = 0
+        self.centroides = []
 
-def k_means(data, k, max_iters=100):
+    # Función para ejecutar el algoritmo k-means
+    def k_means(self,data):
 
-    # Inicializar los centroides de forma aleatoria
-    centroids = data[np.random.randint(0, len(data), k)]
-    #centroids = data[np.random.choice(data.shape[0], k, replace=False)]
-    prev_centroids = []
+        # Inicializar los centroides de forma aleatoria
+        self.centroides = data[np.random.choice(data.shape[0], self.cant_clusters, replace=False)]
+        prev_centroids = []
 
-    # Iterar hasta que no haya cambios en los centroides
-    # O hasta que se alcance el número máximo de iteraciones
-    for _ in range(max_iters):
+        # Iterar hasta que no haya cambios en los centroides
+        # O hasta que se alcance el número máximo de iteraciones
+        for  iter in range(self.max_iters):
+            
+            # Asignar cada punto de datos al cluster más cercano
+            etiquetas = self.etiquetar(data)
 
-        # Asignar cada punto de datos al cluster más cercano
-        # Cada cluster se representa como una lista
-        clusters = [[] for _ in range(k)]
-        for point in data:
-            closest_centroid_index = np.argmin(np.linalg.norm(centroids - point, axis=1))
-            clusters[closest_centroid_index].append(point)
+            # Actualizar los centroides
+            # Se calcula la media de la cantidad de puntos mas cercanos a cada centroide
+            centroides_actualizados = np.array([data[etiquetas == i].mean(axis=0) for i in range(self.cant_clusters)])
 
-        # Actualizar los centroides
-        # Se calcula la media de los valores en cada cluster
-        for i, cluster in enumerate(clusters):
-            centroids[i] = np.mean(cluster, axis=0)
-        
-        # Verificar convergencia
-        # comparando con los centroides anteriores
-        if np.all(prev_centroids == centroids):
-            break
-        
-        prev_centroids = centroids
+            # Verificar convergencia
+            # Comparando con los centroides anteriores
+            if np.all(prev_centroids == centroides_actualizados):
+                print(f"Convergencia alcanzada en la iteración {iter}")
+                break
+            
+            prev_centroids = self.centroides
+            self.centroides = centroides_actualizados
 
-    return centroids
+        return self.centroides
 
-# Función para asignar cada punto de datos al cluster más cercano
-def asignar_cluster(data, centroides):
-        
+    # Función para asignar cada punto de datos al cluster más cercano
+    def etiquetar(self, data):
+            
         # Recorre cada punto de datos y calcula la distancia con cada centroide
-        distancias = np.linalg.norm(data[:, np.newaxis] - centroides, axis=2)
-        
+        distancias = np.linalg.norm(data[:, np.newaxis] - self.centroides, axis=2)
+
+        # Se calcula la inercia, aprovechando que ya se tienen las distancias
+        # La inercia luego se utiliza para aplicar el metodo del codo
+        # y poder determinar la cantidad de clusters k optima para el problema
+        self.inercia = np.sum(np.min(distancias,axis=1)**2)
+
         # Se asigna el cluster con la distancia más corta a cada punto
         return np.argmin(distancias, axis=1)

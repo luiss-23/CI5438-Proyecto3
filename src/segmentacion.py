@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from k_means import k_means, asignar_cluster
+from k_means import KMeans
 import cv2
 import sys
 
@@ -17,7 +17,7 @@ def main():
         sys.exit(1)
     
 
-    imagen = sys.argv[1]
+    nombre_imagen = sys.argv[1]
     k = sys.argv[2]
 
     if len(k) > 1:
@@ -32,32 +32,33 @@ def main():
         k_max = k_min+1
 
     # Cargar las imágenes
-    imagen_1 = cv2.imread(f'../img/{imagen}')
+    imagen = cv2.imread(f'../img/{nombre_imagen}')
 
-    imagen_1 = cv2.cvtColor(imagen_1, cv2.COLOR_BGR2RGB)
+    imagen = cv2.cvtColor(imagen, cv2.COLOR_BGR2RGB)
 
     # Reshaping the image into a 2D array of pixels and 3 color values (RGB)
-    pixel_vals1 = imagen_1.reshape((-1,3))
+    pixel_vals = imagen.reshape((-1,3))
     
     # Convert to float type
-    pixel_vals1 = np.float32(pixel_vals1)
+    pixel_vals = np.float32(pixel_vals)
 
     for k in range(k_min, k_max):
-        print(f'Imagen = {imagen} ; k = {k}')
+        print(f'\nImagen = {nombre_imagen} ; k = {k}')
         # Ejecutar el algoritmo de k-means
-        centroides_1 = k_means(pixel_vals1, k)
+        K_imagen = KMeans(k)
+        centroides = K_imagen.k_means(pixel_vals)
         
         # Renderizar las imágenes resultantes
         # Convertir los valores de los centroides a valores enteros de 8 bits
-        centroides_1 = np.uint8(centroides_1)
+        centroides = np.uint8(centroides)
 
-        labels1 = asignar_cluster(pixel_vals1, centroides_1)
+        labels1 = K_imagen.etiquetar(pixel_vals)
         
-        segmented_data1 = centroides_1[labels1.flatten()]
+        segmented_data1 = centroides[labels1.flatten()]
 
-        segmented_image1 = segmented_data1.reshape((imagen_1.shape))
+        segmented_image1 = segmented_data1.reshape((imagen.shape))
         #plt.imshow(segmented_image1)
-        plt.imsave(f'../img/k={k}{imagen}', segmented_image1)
+        plt.imsave(f'../img/k={k}{nombre_imagen}', segmented_image1)
 
 if __name__ == '__main__':
     main()
