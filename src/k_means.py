@@ -27,9 +27,10 @@ class KMeans:
 
             # Verificar convergencia
             # Comparando con los centroides anteriores
-            if np.all(prev_centroids == centroides_actualizados):
-                print(f"Convergencia alcanzada en la iteración {iter}")
-                break
+            if iter > 0:
+                if np.all(prev_centroids == centroides_actualizados):
+                    print(f"Convergencia alcanzada en la iteración {iter}")
+                    break
             
             prev_centroids = self.centroides
             self.centroides = centroides_actualizados
