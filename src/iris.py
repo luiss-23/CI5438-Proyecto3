@@ -7,7 +7,7 @@ def main():
     # Leer archivo
     # No se toma en cuenta la columna de especies
     # Para trabajar con data no etiquetada
-    data_iris = pd.read_csv("../docs/iris.csv", sep=',')
+    data_iris = pd.read_csv("./docs/iris.csv", sep=',')
     X = data_iris[["sepal_length", "sepal_width", "petal_length", "petal_width"]]    
     y = data_iris["species"]
     
