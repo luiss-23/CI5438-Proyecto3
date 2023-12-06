@@ -1,35 +1,45 @@
 import pandas as pd
 from k_means import KMeans
 import matplotlib.pyplot as plt
+import sys
 
 def main():
     
     # Leer archivo
     # No se toma en cuenta la columna de especies
     # Para trabajar con data no etiquetada
-    data_iris = pd.read_csv("./docs/iris.csv", sep=',')
+    data_iris = pd.read_csv("../docs/iris.csv", sep=',')
     X = data_iris[["sepal_length", "sepal_width", "petal_length", "petal_width"]]    
     y = data_iris["species"]
     
-    # Definir los valores de k a evaluar
-    k_values = [2, 3, 4, 5, 6, 7]
+    if len(sys.argv) != 2:
+        inercia = False
+    else:
+        if sys.argv[1] == 'i':
+            inercia = True
+        else:
+            inercia = False
 
-    # Ejecutar el algoritmo k-means para cada valor de k
-    inertias = []
-    for k in k_values:
-        print(f"\nk = {k}")
-        K_iris = KMeans(k, 100)
-        K_iris.k_means(X.values)
-        inertias.append(K_iris.inercia)
+    if inercia:
+        # Definir los valores de k a evaluar
+        k_values = [k for k in range(2, 10)]
 
-    # Graficar la inercia en función de k
-    # Aplicando el "metodo del codo" se puede apreciar que el k optimo se encuentra entre 3 y 4
-    # Esto concuerda con la cantidad de especies de iris que hay en el dataset, que son 3
-    plt.plot(k_values, inertias)
-    plt.title("Metodo del codo")
-    plt.xlabel("k")
-    plt.ylabel("Inercia")
-    plt.show()
+        # Ejecutar el algoritmo k-means para cada valor de k
+        inertias = []
+        for k in k_values:
+            print(f"\nk = {k}")
+            K_iris = KMeans(k, 100)
+            K_iris.k_means(X.values)
+            inertias.append(K_iris.inercia)
+
+        # Graficar la inercia en función de k
+        # Aplicando el "metodo del codo" se puede apreciar que el k optimo se encuentra entre 3 y 4
+        # Esto concuerda con la cantidad de especies de iris que hay en el dataset, que son 3
+        plt.plot(k_values, inertias)
+        plt.title("Metodo del codo")
+        plt.xlabel("k")
+        plt.ylabel("Inercia")
+        plt.show()
     
     
     k = 3

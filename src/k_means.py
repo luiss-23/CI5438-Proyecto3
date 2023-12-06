@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.spatial.distance import cdist
 class KMeans:
     
     def __init__(self, k, max_iters=100):
@@ -11,13 +12,14 @@ class KMeans:
     def k_means(self,data):
 
         # Inicializar los centroides de forma aleatoria
+        # Se escogen k puntos de forma aleatoria, sin reemplazo a partir de los datos
         self.centroides = data[np.random.choice(data.shape[0], self.cant_clusters, replace=False)]
         prev_centroids = []
 
         # Iterar hasta que no haya cambios en los centroides
         # O hasta que se alcance el número máximo de iteraciones
         for  iter in range(self.max_iters):
-            
+     
             # Asignar cada punto de datos al cluster más cercano
             etiquetas = self.etiquetar(data)
 
@@ -40,8 +42,9 @@ class KMeans:
     # Función para asignar cada punto de datos al cluster más cercano
     def etiquetar(self, data):
             
-        # Recorre cada punto de datos y calcula la distancia con cada centroide
-        distancias = np.linalg.norm(data[:, np.newaxis] - self.centroides, axis=2)
+        # Se calcula la norma euclidiana entre cada punto y cada centroide
+        # Nos apoyamos del metodo cdist de scipy
+        distancias = cdist(data, self.centroides ,'euclidean')
 
         # Se calcula la inercia, aprovechando que ya se tienen las distancias
         # La inercia luego se utiliza para aplicar el metodo del codo
