@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from k_means import KMeans
 import cv2
-import sys
+import sys, os
 
 def main():
 
@@ -32,7 +32,10 @@ def main():
         k_max = k_min + 1
 
     # Cargar las imágenes
-    imagen = cv2.imread(f'../img/real_img/{nombre_imagen}')
+    if os.name == 'nt':
+        imagen = cv2.imread(f'../img/real_img/{nombre_imagen}')
+    elif os.name == 'posix':
+        imagen = cv2.imread(f'./img/real_img/{nombre_imagen}')
 
     imagen = cv2.cvtColor(imagen, cv2.COLOR_BGR2RGB)
 
@@ -58,7 +61,10 @@ def main():
 
         segmented_image1 = segmented_data1.reshape((imagen.shape))
         #plt.imshow(segmented_image1)
-        plt.imsave(f'../img/segmentation_results/k_{k}_{nombre_imagen}', segmented_image1)
+        if os.name == 'nt':
+            plt.imsave(f'../img/segmentation_results/k_{k}_{nombre_imagen}', segmented_image1)
+        elif os.name == 'posix':
+            plt.imsave(f'./img/segmentation_results/k_{k}_{nombre_imagen}', segmented_image1)
 
 if __name__ == '__main__':
     main()

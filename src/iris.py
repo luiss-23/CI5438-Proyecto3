@@ -1,14 +1,17 @@
 import pandas as pd
 from k_means import KMeans
 import matplotlib.pyplot as plt
-import sys
+import sys, os
 
 def main():
     
     # Leer archivo
     # No se toma en cuenta la columna de especies
     # Para trabajar con data no etiquetada
-    data_iris = pd.read_csv("../docs/iris.csv", sep=',')
+    if os.name == 'nt':
+        data_iris = pd.read_csv("../docs/iris.csv", sep=',')
+    elif os.name == 'posix':
+        data_iris = pd.read_csv("./docs/iris.csv", sep=',')
     X = data_iris[["sepal_length", "sepal_width", "petal_length", "petal_width"]]    
     y = data_iris["species"]
     
@@ -40,7 +43,10 @@ def main():
         plt.xlabel("k")
         plt.ylabel("Inercia")
         # plt.show()
-        plt.savefig(f'../img/iris_results/elbow_method.png')
+        if os.name == 'nt':
+            plt.savefig(f'../img/iris_results/elbow_method.png')
+        elif os.name == 'posix':
+            plt.savefig(f'./img/iris_results/elbow_method.png')
     
     
     # k = 3
@@ -56,7 +62,10 @@ def main():
         plt.legend()
         plt.title(f'Algoritmo K-Means con k: {k}')
         # plt.show()
-        plt.savefig(f'../img/iris_results/iris_k_{k}.png')
+        if os.name == 'nt':
+            plt.savefig(f'../img/iris_results/iris_k_{k}.png')
+        elif os.name == 'posix':
+            plt.savefig(f'../img/iris_results/iris_k_{k}.png')
 
         etiquetas = K_iris.etiquetar(X.values)    
 
