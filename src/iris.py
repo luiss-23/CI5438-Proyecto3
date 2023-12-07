@@ -39,32 +39,38 @@ def main():
         plt.title("Metodo del codo")
         plt.xlabel("k")
         plt.ylabel("Inercia")
-        plt.show()
+        # plt.show()
+        plt.savefig(f'../img/iris_results/elbow_method.png')
     
     
-    k = 3
-    K_iris = KMeans(k, 100)
-    centroides = K_iris.k_means(X.values)
+    # k = 3
+    # Realizando las pruebas con los k requeridos en el enunciado del proyecto
+    for k in range(2, 6):
+        K_iris = KMeans(k, 100)
+        centroides = K_iris.k_means(X.values)
 
-    plt.scatter(X.values[:,0], X.values[:,1], s = 50, label='Datos')
-    plt.scatter(centroides[:,0], centroides[:,1], c='red', marker='*', s=100, label='Centroides')
-    plt.legend()
-    plt.title(f'Algoritmo K-Means con k: {k}')
-    plt.show()
+        # Graficar los datos y los centroides
+        plt.figure()
+        plt.scatter(X.values[:,0], X.values[:,1], s = 50, label='Datos')
+        plt.scatter(centroides[:,0], centroides[:,1], c='red', marker='*', s=100, label='Centroides')
+        plt.legend()
+        plt.title(f'Algoritmo K-Means con k: {k}')
+        # plt.show()
+        plt.savefig(f'../img/iris_results/iris_k_{k}.png')
 
-    etiquetas = K_iris.etiquetar(X.values)    
+        etiquetas = K_iris.etiquetar(X.values)    
 
-    species_to_int = {"Iris-setosa": 0, "Iris-versicolor": 1, "Iris-virginica": 2}
-    y_test = [species_to_int[x] for x in y]
+        species_to_int = {"Iris-setosa": 0, "Iris-versicolor": 1, "Iris-virginica": 2}
+        y_test = [species_to_int[x] for x in y]
 
-    # Calcular precision y mostrar resultaods
-    correctos = 0
-    for i in range(len(etiquetas)):
-        print(f"Kmeans: {etiquetas[i]}, real: {y_test[i]}")
-        if etiquetas[i] == y_test[i]:
-            correctos += 1
-    precision = correctos / len(etiquetas)
-    print(f"Precision: {precision*100}%")
+        # Calcular precision y mostrar resultaods
+        correctos = 0
+        for i in range(len(etiquetas)):
+            print(f"Kmeans: {etiquetas[i]}, real: {y_test[i]}")
+            if etiquetas[i] == y_test[i]:
+                correctos += 1
+        precision = correctos / len(etiquetas)
+        print(f"Precision: {precision*100}%")
 
     
 

@@ -29,10 +29,10 @@ def main():
             sys.exit(1)
     else:
         k_min = int(k)
-        k_max = k_min+1
+        k_max = k_min + 1
 
     # Cargar las imágenes
-    imagen = cv2.imread(f'../img/{nombre_imagen}')
+    imagen = cv2.imread(f'../img/real_img/{nombre_imagen}')
 
     imagen = cv2.cvtColor(imagen, cv2.COLOR_BGR2RGB)
 
@@ -58,7 +58,7 @@ def main():
 
         segmented_image1 = segmented_data1.reshape((imagen.shape))
         #plt.imshow(segmented_image1)
-        plt.imsave(f'../img/k={k}{nombre_imagen}', segmented_image1)
+        plt.imsave(f'../img/segmentation_results/k_{k}_{nombre_imagen}', segmented_image1)
 
 if __name__ == '__main__':
     main()
